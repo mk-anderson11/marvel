@@ -11,22 +11,24 @@
 </head>
 <body>
 <form>
-Enter A Utah City: <input type="text" id="cityfield" value=""><br>
-Suggestion: <span id="txtHint">Empty</span>
+Enter A Date (yyyy-mm-dd): <input type="text" id="date1" value="1985-05-01"><br>
+Enter Another Date (yyyy-mm-dd): <input type="text" id="date2" value="1985-05-05"><br>
+
 <div id = "target">
 <button id="button" type="button">Submit</button>
-</div>
+<!--</div>
 </form>
 <p>City</p>
 <textarea id="dispcity">No City</textarea>
-<p>Current Weather</p>
-<div id="weather">No weather</div>
+<p>Current Weather</p>-->
+<div id="weather">No Comics to display</div>
+<!--
 <h2>Stack Exchange Query</h2>
 Search StackExchange: <input type="text" id="stackQuery" value=""><br>
 <input id="stack" type="button" value="Submit">
 <br>
 <div id="stackResults">StackExchange Query Results</div>
-
+-->
 <script>
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
@@ -229,17 +231,16 @@ $( "#cityfield" ).keyup(function() {
 			.complete(function() { console.log("complete"); }); 
 }); 
 $("#button").click(function(e){
-	var value = $("#cityfield").val();
-	console.log(value);
-	$("#dispcity").text(value);
+	var date1 = $("#date1").val();
+	var date2 = $("#date2").val();
 	var publicKey = 'c3694cb3e1c008e56a319b70165a5091';
 	var privateKey = 'd31e50b3e507a783fb0cbc231a7f477fbc4a01fc';
 	var ts = Date.now();
 	var hash = calcMD5(ts+privateKey+publicKey)
-	console.log("Test");	
-	console.log(hash); 
+	// console.log("Test");	
+	// console.log(hash); 
 
-	var myurl = "http://gateway.marvel.com:80/v1/public/comics?dateRange=2013-01-01%2C2013-01-02&ts=" + ts + "&apikey=c3694cb3e1c008e56a319b70165a5091&hash=" + hash;
+	var myurl = "http://gateway.marvel.com:80/v1/public/comics?dateRange="+date1+"%2C"+date2+"&ts=" + ts + "&apikey=c3694cb3e1c008e56a319b70165a5091&hash=" + hash;
 	// myurl += value;
 	// myurl += ".json"
 	console.log(myurl);
@@ -247,16 +248,45 @@ $("#button").click(function(e){
 		url : myurl,
 		dataType : "json",
 		success : function(data) {
-			console.log(data);			
-			//var location = data['location']['city'];
-			//var temp_string = data['current_observation']['temperature_string'];
-			//var curr_weather = data['current_observation']['weather'];
-			//everything = "<ul>"
-			//everything += "<li>Location: "+location;
-			//everything += "<li>Temperature: "+temp_string;
-			//everything += "<li>Weather: "+curr_weather;
-			//everything += "</ul>"
-			//$("#weather").html(everything);
+			
+
+			console.log(data)
+			console.log("Results Size = " + data.data.results.length);
+			
+			if(data.data.results.length == 0)
+			{
+				alert("No comics found, try expanding date range");
+			}
+			else
+			{			
+				var result = data.status;
+				var description = data.data.results[0].description;
+				if(description == null)
+				{
+					description = "Not Available";
+				}				
+				var seriesName = data.data.results[0].series.name;
+				var issue = data.data.results[0].issueNumber;
+				var img_url = data.data.results[0].images[0].path;
+				var img_ext = data.data.results[0].images[0].extension;
+				var imgURL = img_url + "." + img_ext;
+				var price = "$"+data.data.results[0].prices[0].price;		
+				if(price == "$0")
+				{
+					price = "Not Available";
+				}
+				
+				everything = "<ul>"
+				everything += "<li>Series Name: "+seriesName;
+				everything += "<li>Issue Number: "+issue;			
+				everything += "<li>Description: "+description;
+				everything += "<li>Price : " +price;
+
+				everything += "</ul>"
+				everything += "<img src=" + imgURL +">";
+			$("#weather").html(everything);
+			}
+
 			},
 		error : function() {
 			alert("Warning");		
