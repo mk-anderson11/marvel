@@ -4,31 +4,72 @@
 <head>
 <meta charset="utf-8"/>
 <link rel="stylesheet" type="text/css" href="lab2/theme.css">
-<title>City Finder</title>
+<title>Comics!!!</title>
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
-    
 </head>
 <body>
+<style>
+  .banner {
+     background: url("marvel-banner.jpg");
+  	 background-size: 100% 100%;
+  	 height: 300px;
+  	 background-repeat: no-repeat;
+  }
+
+
+  #date1
+  {
+    width: 75px;
+    margin-left: 53px;
+  }
+
+  #date2
+  {
+width: 75px;
+  }
+
+  #text
+  {
+    float left;
+    background-color: rgba(200,200,200,0.1)
+
+  }
+
+
+  body
+  {
+    background-image: url(Iron-Man.jpg);
+    max-width: 100%;
+    background-position: 0px 300px;
+    height : auto;
+    max-height:100%;
+    background-repeat: no-repeat;
+  }
+
+  </style>
+
+
+  <header class="banner" role="banner">
+
+  </header>
+
+
+
+<div id="text">
 <form>
 Enter A Date (yyyy-mm-dd): <input type="text" id="date1" value="1985-05-01"><br>
 Enter Another Date (yyyy-mm-dd): <input type="text" id="date2" value="1985-05-05"><br>
 
 <div id = "target">
 <button id="button" type="button">Submit</button>
-<!--</div>
-</form>
-<p>City</p>
-<textarea id="dispcity">No City</textarea>
-<p>Current Weather</p>-->
+	<input id="randDayButton" type="submit" value="I'm Feeling Lucky"><br>
+
 <div id="weather">No Comics to display</div>
-<!--
-<h2>Stack Exchange Query</h2>
-Search StackExchange: <input type="text" id="stackQuery" value=""><br>
-<input id="stack" type="button" value="Submit">
-<br>
-<div id="stackResults">StackExchange Query Results</div>
--->
+
+</div>
+</form>
+
 <script>
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
@@ -68,7 +109,7 @@ function str2blks_MD5(str)
 }
 
 /*
- * Add integers, wrapping at 2^32. This uses 16-bit operations internally 
+ * Add integers, wrapping at 2^32. This uses 16-bit operations internally
  * to work around bugs in some JS interpreters.
  */
 function add(x, y)
@@ -144,7 +185,7 @@ function calcMD5(str)
     a = ff(a, b, c, d, x[i+12], 7 ,  1804603682);
     d = ff(d, a, b, c, x[i+13], 12, -40341101);
     c = ff(c, d, a, b, x[i+14], 17, -1502002290);
-    b = ff(b, c, d, a, x[i+15], 22,  1236535329);    
+    b = ff(b, c, d, a, x[i+15], 22,  1236535329);
 
     a = gg(a, b, c, d, x[i+ 1], 5 , -165796510);
     d = gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
@@ -162,7 +203,7 @@ function calcMD5(str)
     d = gg(d, a, b, c, x[i+ 2], 9 , -51403784);
     c = gg(c, d, a, b, x[i+ 7], 14,  1735328473);
     b = gg(b, c, d, a, x[i+12], 20, -1926607734);
-    
+
     a = hh(a, b, c, d, x[i+ 5], 4 , -378558);
     d = hh(d, a, b, c, x[i+ 8], 11, -2022574463);
     c = hh(c, d, a, b, x[i+11], 16,  1839030562);
@@ -204,32 +245,43 @@ function calcMD5(str)
   }
   return rhex(a) + rhex(b) + rhex(c) + rhex(d);
 }
- 
+
 
 
 
 
 $(document).ready(function() {
-$( "#cityfield" ).keyup(function() { 
-	var url = "http://bioresearch.byu.edu/cs260/jquery/getcity.cgi?q="+$("#cityfield").val();
-	$.getJSON(url ,function(data) { 
-		var everything;
-		everything = "<ul>"; 
-		$.each(data, function(i,item) { 
-			everything += "<li> "+data[i].city; 
-		}); 
-		everything += "</ul>"; 
-		$("#txtHint").html(everything); 
-	}) 
-		.done(function() { console.log('getJSON request succeeded!'); }) 
-		.fail(function(jqXHR, textStatus, errorThrown) { 
-			console.log('getJSON request failed! ' + textStatus); 
-			console.log("incoming "+jqXHR.responseText); 
-		}) 
-			.always(function() { console.log('getJSON request ended!'); 
-		}) 
-			.complete(function() { console.log("complete"); }); 
-}); 
+
+
+
+$("#randDayButton").click(function(e){
+
+  var year1  = Math.floor((Math.random() * 56)+1960);
+  var month1 = Math.floor((Math.random() * 12)+1);
+  var day1   = Math.floor((Math.random() * 30) + 1);
+
+  var date1 =year1+'-'+month1+'-'+day1;
+
+
+var year2  = Math.floor((Math.random() * 56)+1960);
+var month2 = Math.floor((Math.random() * 12)+1);
+var day2   = Math.floor((Math.random() * 30) + 1);
+
+
+      var date2 =year2+'-'+month2+'-'+day2;
+
+      if(date1<date2)
+      {
+        $("#date1").val(date1);
+        $("#date2").val(date2);
+      }
+      else {
+        $("#date1").val(date2);
+        $("#date2").val(date1);
+      }
+	e.preventDefault();
+});
+
 $("#button").click(function(e){
 	var date1 = $("#date1").val();
 	var date2 = $("#date2").val();
@@ -237,8 +289,8 @@ $("#button").click(function(e){
 	var privateKey = 'd31e50b3e507a783fb0cbc231a7f477fbc4a01fc';
 	var ts = Date.now();
 	var hash = calcMD5(ts+privateKey+publicKey)
-	// console.log("Test");	
-	// console.log(hash); 
+	// console.log("Test");
+	// console.log(hash);
 
 	var myurl = "http://gateway.marvel.com:80/v1/public/comics?dateRange="+date1+"%2C"+date2+"&ts=" + ts + "&apikey=c3694cb3e1c008e56a319b70165a5091&hash=" + hash;
 	// myurl += value;
@@ -248,37 +300,37 @@ $("#button").click(function(e){
 		url : myurl,
 		dataType : "json",
 		success : function(data) {
-			
+
 
 			console.log(data)
 			console.log("Results Size = " + data.data.results.length);
-			
+
 			if(data.data.results.length == 0)
 			{
 				alert("No comics found, try expanding date range");
 			}
 			else
-			{			
+			{
 				var result = data.status;
 				var description = data.data.results[0].description;
 				if(description == null)
 				{
 					description = "Not Available";
-				}				
+				}
 				var seriesName = data.data.results[0].series.name;
 				var issue = data.data.results[0].issueNumber;
 				var img_url = data.data.results[0].images[0].path;
 				var img_ext = data.data.results[0].images[0].extension;
 				var imgURL = img_url + "." + img_ext;
-				var price = "$"+data.data.results[0].prices[0].price;		
+				var price = "$"+data.data.results[0].prices[0].price;
 				if(price == "$0")
 				{
 					price = "Not Available";
 				}
-				
+
 				everything = "<ul>"
 				everything += "<li>Series Name: "+seriesName;
-				everything += "<li>Issue Number: "+issue;			
+				everything += "<li>Issue Number: "+issue;
 				everything += "<li>Description: "+description;
 				everything += "<li>Price : " +price;
 
@@ -289,34 +341,19 @@ $("#button").click(function(e){
 
 			},
 		error : function() {
-			alert("Warning");		
+			alert("Warning");
 			}
 	});
 
 	e.preventDefault();
 });
-$("#stack").click( function(){
-	var value = $("#stackQuery").val();
-	var stackUrl = "https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle="+ value  +"&site=stackoverflow"
-	// alert("Stack URL = "+ stackUrl);
-	$.ajax({
-		url : stackUrl,
-		dataType : "json",
-		success : function(data) {
-			console.log(data);
-			var num_results = data['quota_remaining'];
-			var article_title = data['items'][0]['title'];
-			var article_link = data['items'][0]['link'];
-			everything = "<ul>";
-			everything += "<li>Number of Articles: "+ num_results;
-			everything += "<li>Name of Article: " + article_title;
-				everything += "<li href = "+ article_link  +">Link to Article: " + article_link;
-			$("#stackResults").html(everything);
-		} 
-	});
-});
-}); 
-</script>
 
+});
+</script>
+</div>
+
+<footer class="footer" role="banner">
+
+</footer>
 </body>
 </html>
